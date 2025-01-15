@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Descent for Linear Regression</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            font-size: 150%;
+        }
+        section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+            margin-top: 20px;
+        }
+        p, li {
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .image-placeholder, .interactive-placeholder, .continue-button, .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
+            text-align: left;
+        }
+        .image-placeholder img, .interactive-placeholder img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .vocab-section {
+            background-color: #f0f8ff;
+        }
+        .vocab-section h3 {
+            color: #1e90ff;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .vocab-section h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        .vocab-term {
+            font-weight: bold;
+            color: #1e90ff;
+        }
+        .why-it-matters {
+            background-color: #ffe6f0;
+        }
+        .why-it-matters h3 {
+            color: #d81b60;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .stop-and-think {
+            background-color: #e6e6ff;
+        }
+        .stop-and-think h3 {
+            color: #4b0082;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .continue-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .reveal-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #4b0082;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .test-your-knowledge {
+            background-color: #e6ffe6;
+        }
+        .test-your-knowledge h3 {
+            color: #28a745;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .test-your-knowledge h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        .test-your-knowledge p {
+            margin-bottom: 15px;
+        }
+        .check-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            color: #ffffff;
+            background-color: #28a745;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+        }
+        .faq-section {
+            background-color: #fffbea;
+        }
+        .faq-section h3 {
+            color: #ffcc00;
+            font-size: 0.75em;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+        .faq-section h4 {
+            color: #000;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <section id="section1">
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="An illustration of a scatter plot with data points and a line representing a linear regression model. Arrows indicate the process of gradient descent, adjusting the line to fit the data.">
+        </div>
+        <h1>Gradient Descent for Linear Regression</h1>
+        <p>We've journeyed through the theoretical landscape of gradient descent, and now it's time to put our knowledge into action. In this lesson, we'll apply the power of gradient descent to train a linear regression model. Get ready to see how the update rule and convergence criteria work together to find the best-fitting line for our data!</p>
+        <div class="continue-button" onclick="showNextSection(2)">Continue</div>
+    </section>
+
+    <section id="section2">
+        <p>Let's quickly recap the basics of linear regression. Our goal is to model the relationship between a dependent variable (y) and one or more independent variables (x) using a linear equation. In the simplest case, with one independent variable, the equation is:</p>
+        <p>\[ y = \beta_0 + \beta_1x \]</p>
+        <p>where:</p>
+        <ul>
+            <li><strong>y</strong> is the dependent variable (the value we want to predict).</li>
+            <li><strong>x</strong> is the independent variable (the feature we're using to make predictions).</li>
+            <li><strong>β₀</strong> is the y-intercept (the value of y when x is 0).</li>
+            <li><strong>β₁</strong> is the slope (the change in y for a one-unit increase in x).</li>
+        </ul>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="A graph with a straight line representing a linear regression model. The x-axis is labeled 'Independent Variable (x)', and the y-axis is labeled 'Dependent Variable (y)'. The y-intercept is marked as 'β₀', and the slope is indicated by a right triangle with the rise labeled 'β₁' and the run labeled '1'.">
+        </div>
+        <div class="continue-button" onclick="showNextSection(3)">Continue</div>
+    </section>
+
+    <section id="section3">
+        
+        <p>To train our linear regression model, we need a cost function to measure how well the line fits the data. A common choice for linear regression is the <strong>Mean Squared Error (MSE)</strong>:</p>
+        <p>\[ C(\beta_0, \beta_1) = \frac{1}{2n} \sum_{i=1}^n (y_i - \hat{y}_i)^2 \]</p>
+        <p>where:</p>
+        <ul>
+            <li><strong>n</strong> is the number of data points.</li>
+            <li><strong>yᵢ</strong> is the actual value of the dependent variable for the i-th data point.</li>
+            <li><strong>ŷᵢ</strong> is the predicted value of the dependent variable for the i-th data point (calculated using our linear equation: ŷᵢ = β₀ + β₁xᵢ).</li>
+            <li><strong>(1/2n)</strong> is just the mean of the squared errors. The factor of 1/2 is included for mathematical convenience, as it will cancel out with the 2 that appears when we take the derivative.</li>
+        </ul>
+        <div class="why-it-matters">
+            <h3>Why It Matters</h3>
+            <p>Minimizing the MSE means finding the values of β₀ and β₁ that result in the smallest average squared difference between the predicted and actual values. This gives us the line that best fits the data.</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(4)">Continue</div>
+    </section>
+
+    <section id="section4">
+        <p>To use gradient descent, we need to calculate the partial derivatives of the cost function (MSE) with respect to our parameters, β₀ and β₁. These partial derivatives form the gradient vector.</p>
+        <p><strong>1. Partial Derivative with respect to β₀ (Intercept):</strong></p>
+        <p>\[ \frac{\partial C}{\partial \beta_0} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) \]</p>
+        <p><strong>2. Partial Derivative with respect to β₁ (Slope):</strong></p>
+        <p>\[ \frac{\partial C}{\partial \beta_1} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i)x_i \]</p>
+        <p>Let's derive these formulas step-by-step:</p>
+        <h3>Derivation of ∂C/∂β₀</h3>
+        <p>Starting with the MSE:</p>
+        <p>\[ C(\beta_0, \beta_1) = \frac{1}{2n} \sum_{i=1}^n (y_i - (\beta_0 + \beta_1x_i))^2 \]</p>
+        <p>Applying the chain rule:</p>
+        <p>\[ \frac{\partial C}{\partial \beta_0} = \frac{1}{2n} * 2 * \sum_{i=1}^n (y_i - (\beta_0 + \beta_1x_i)) * (-1) \]</p>
+        <p>Simplifying:</p>
+        <p>\[ \frac{\partial C}{\partial \beta_0} = -\frac{1}{n} \sum_{i=1}^n (y_i - (\beta_0 + \beta_1x_i)) \]</p>
+        <p>Since ŷᵢ = β₀ + β₁xᵢ:</p>
+        <p>\[ \frac{\partial C}{\partial \beta_0} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) \]</p>
+        <h3>Derivation of ∂C/∂β₁</h3>
+        <p>Again, starting with the MSE:</p>
+        <p>\[ C(\beta_0, \beta_1) = \frac{1}{2n} \sum_{i=1}^n (y_i - (\beta_0 + \beta_1x_i))^2 \]</p>
+        <p>Applying the chain rule:</p>
+        <p>\[ \frac{\partial C}{\partial \beta_1} = \frac{1}{2n} * 2 * \sum_{i=1}^n (y_i - (\beta_0 + \beta_1x_i)) * (-x_i) \]</p>
+        <p>Simplifying:</p>
+        <p>\[ \frac{\partial C}{\partial \beta_1} = -\frac{1}{n} \sum_{i=1}^n (y_i - (\beta_0 + \beta_1x_i))x_i \]</p>
+        <p>Since ŷᵢ = β₀ + β₁xᵢ:</p>
+        <p>\[ \frac{\partial C}{\partial \beta_1} = \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i)x_i \]</p>
+        <div class="continue-button" onclick="showNextSection(5)">Continue</div>
+    </section>
+
+    <section id="section5">
+        <p>Now that we have the partial derivatives, we can plug them into the general gradient descent update rule to get the specific update rules for linear regression:</p>
+        <p><strong>1. Update rule for β₀:</strong></p>
+        <p>\[ \beta_0 = \beta_0 - \alpha\frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) \]</p>
+        <p><strong>2. Update rule for β₁:</strong></p>
+        <p>\[ \beta_1 = \beta_1 - \alpha\frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i)x_i \]</p>
+        <p>These update rules tell us how to adjust the intercept (β₀) and the slope (β₁) in each iteration to move closer to the minimum of the MSE cost function.</p>
+        <div class="continue-button" onclick="showNextSection(6)">Continue</div>
+    </section>
+
+    <section id="section6">
+        <p>Let's walk through one iteration of gradient descent with a simple example. Suppose we have the following data points:</p>
+        <table>
+            <tr><th>x</th><th>y</th></tr>
+            <tr><td>1</td><td>2</td></tr>
+            <tr><td>2</td><td>4</td></tr>
+            <tr><td>3</td><td>5</td></tr>
+        </table>
+        <p>And our initial guesses for the parameters are:</p>
+        <p>β₀ = 0</p>
+        <p>β₁ = 0</p>
+        <p>Let's use a learning rate of α = 0.1.</p>
+        <h3>Step 1: Calculate the predicted values (ŷᵢ) using the current parameters:</h3>
+        <p>\[ \hat{y}_1 = \beta_0 + \beta_1x_1 = 0 + 0 * 1 = 0 \]</p>
+        <p>\[ \hat{y}_2 = \beta_0 + \beta_1x_2 = 0 + 0 * 2 = 0 \]</p>
+        <p>\[ \hat{y}_3 = \beta_0 + \beta_1x_3 = 0 + 0 * 3 = 0 \]</p>
+        <h3>Step 2: Calculate the partial derivatives (gradients):</h3>
+        <p>\[ \frac{\partial C}{\partial \beta_0} = \frac{1}{3} \sum_{i=1}^3 (\hat{y}_i - y_i) = \frac{1}{3} * [(0 - 2) + (0 - 4) + (0 - 5)] = −3.6667 \]</p>
+        <p>\[ \frac{\partial C}{\partial \beta_1} = \frac{1}{3} \sum_{i=1}^3 (\hat{y}_i - y_i)x_i = \frac{1}{3} * [(0 - 2)*1 + (0 - 4)*2 + (0 - 5)*3] = -\frac{25}{3} \]</p>
+        <h3>Step 3: Update the parameters using the update rules:</h3>
+        <p>\[ \beta_0 = \beta_0 - \alpha\frac{\partial C}{\partial \beta_0} = 0 - 0.1 * (−3.6667) = 0.3667 \]</p>
+        <p>\[ \beta_1 = \beta_1 - \alpha\frac{\partial C}{\partial \beta_1} = 0 - 0.1 * (-\frac{25}{3}) \approx 0.833 \]</p>
+        <p>After one iteration, our updated parameters are β₀ ≈ 0.3667 and β₁ ≈ 0.833. We would repeat these steps for multiple iterations until the convergence criteria are met.</p>
+        <div class="continue-button" onclick="showNextSection(7)">Continue</div>
+    </section>
+
+    <section id="section7">
+        
+        <p>Let's visualize how gradient descent adjusts the line of best fit in each iteration.</p>
+        <div class="interactive-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="A scatter plot of data points (e.g., the example data from the previous section). A line represents the current linear regression model. Sliders control β₀ (intercept) and β₁ (slope). A button initiates gradient descent. When clicked, the line iteratively updates, following the gradient descent steps. The MSE is displayed and decreases with each iteration. The path of (β₀, β₁) is also shown on a separate contour plot of the MSE cost function. A marker on the contour plot follows the updates, moving towards the minimum.">
+        </div>
+        <p>In this interactive element, you can see how gradient descent iteratively adjusts the intercept and slope of the line to minimize the MSE. The contour plot shows the path taken by the parameters, moving towards the lowest point on the cost function surface.</p>
+        <div class="continue-button" onclick="showNextSection(8)">Continue</div>
+    </section>
+
+    <section id="section8">
+        
+        <p>Now, let's outline the steps to implement gradient descent for linear regression:</p>
+        <ol>
+            <li><strong>Initialize the parameters (β₀ and β₁) to some initial values (e.g., 0, 0).</strong></li>
+            <li><strong>Set the learning rate (α) and the convergence criteria (e.g., ε and maximum iterations).</strong></li>
+            <li><strong>Repeat until convergence:</strong>
+                <ul>
+                    <li><strong>a. Calculate the predicted values (ŷᵢ) for all data points using the current parameters.</strong></li>
+                    <li><strong>b. Calculate the partial derivatives (gradients) of the MSE with respect to β₀ and β₁.</strong></li>
+                    <li><strong>c. Update the parameters using the gradient descent update rules.</strong></li>
+                    <li><strong>d. Check for convergence (e.g., based on the magnitude of the gradient or the maximum number of iterations).</strong></li>
+                </ul>
+            </li>
+        </ol>
+        <div class="continue-button" onclick="showNextSection(9)">Continue</div>
+    </section>
+
+    <section id="section9">
+        
+        <div class="vocab-section">
+            <h3>Build Your Vocab</h3>
+            <h4 class="vocab-term">Mean Squared Error (MSE)</h4>
+            <p>A common cost function used in linear regression that measures the average squared difference between the predicted values (ŷᵢ) and the actual values (yᵢ).</p>
+            <h4 class="vocab-term">Partial Derivative</h4>
+            <p>The derivative of a function with respect to one of its variables, holding the other variables constant. In gradient descent, we use partial derivatives to form the gradient vector.</p>
+            <h4 class="vocab-term">Gradient Vector</h4>
+            <p>A vector containing the partial derivatives of a function with respect to each of its variables. It points in the direction of the steepest ascent of the function.</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(10)">Continue</div>
+    </section>
+
+    <section id="section10">
+        
+        <div class="stop-and-think">
+            <h3>Stop and Think</h3>
+            <h4>How would the gradient descent algorithm change if we were dealing with multiple linear regression (i.e., more than one independent variable)? What would the update rules look like?</h4>
+            <button class="reveal-button" onclick="revealAnswer('stop-and-think-answer')">Reveal</button>
+            <p id="stop-and-think-reveal" style="display: none;">In multiple linear regression, we would have more than one β coefficient (one for each independent variable). The update rule would be similar, but we would have a separate update rule for each β. The gradient vector would have more components, one for each β, and we would update all of them simultaneously in each iteration.</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(11)">Continue</div>
+    </section>
+
+    <section id="section11">
+        
+        <div class="faq-section">
+            <h3>Frequently Asked Questions</h3>
+            <h4>Why do we square the errors in the MSE cost function?</h4>
+            <p>Squaring the errors has a few advantages: (1) It ensures that the errors are always positive, so positive and negative errors don't cancel each other out. (2) It penalizes larger errors more heavily than smaller errors, which tends to lead to a better fit. (3) It makes the cost function differentiable, which is necessary for using gradient descent.</p>
+            <h4>Can we use other cost functions for linear regression besides MSE?</h4>
+            <p>Yes, other cost functions can be used, such as Mean Absolute Error (MAE). However, MSE is popular because it's differentiable and leads to a closed-form solution (using the normal equation) in addition to being suitable for gradient descent. The choice of cost function can depend on the specific problem and the desired properties of the model.</p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(12)">Continue</div>
+    </section>
+
+    <section id="section12">
+        <h2>Test Your Knowledge</h2>
+        <div class="test-your-knowledge">
+            <h3>Test Your Knowledge</h3>
+            <h4>For a linear regression model \( \hat{y} = \beta_0 + \beta_1x \), what is the partial derivative of the MSE cost function with respect to \( \beta_1 \)?</h4>
+            <div id="question1-options">
+                <input type="radio" id="q1-option1" name="question1" value="1">
+                <label for="q1-option1">\( \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i) \)</label><br>
+                <input type="radio" id="q1-option2" name="question1" value="2">
+                <label for="q1-option2">\( \frac{1}{n} \sum_{i=1}^n (\hat{y}_i - y_i)x_i \)</label><br>
+                <input type="radio" id="q1-option3" name="question1" value="3">
+                <label for="q1-option3">\( \frac{1}{2n} \sum_{i=1}^n (y_i - \hat{y}_i)^2 \)</label><br>
+            </div>
+            <button class="check-button" onclick="checkAnswer('question1', 2)">Check Answer</button>
+            <p id="question1-feedback" style="display: none;"></p>
+        </div>
+        <div class="test-your-knowledge">
+            <h3>Test Your Knowledge</h3>
+            <h4>Given the data points (x=1, y=3), (x=2, y=5), a current model \( \hat{y} = 2 + 0.5x \), and a learning rate \( \alpha = 0.1 \), calculate the updated values of \( \beta_0 \) and \( \beta_1 \) after one iteration of gradient descent.</h4>
+            <div id="question2-options">
+                <input type="radio" id="q2-option1" name="question2" value="1">
+                <label for="q2-option1">\( \beta_0 \approx 2.125, \beta_1 \approx 0.725 \)</label><br>
+                <input type="radio" id="q2-option2" name="question2" value="2">
+                <label for="q2-option2">\( \beta_0 \approx 1.9, \beta_1 \approx 0.3 \)</label><br>
+                <input type="radio" id="q2-option3" name="question2" value="3">
+                <label for="q2-option3">\( \beta_0 \approx 2.5, \beta_1 \approx 1.0 \)</label><br>
+            </div>
+            <button class="check-button" onclick="checkAnswer('question2', 1)">Check Answer</button>
+            <p id="question2-feedback" style="display: none;"></p>
+        </div>
+        <div class="continue-button" onclick="showNextSection(13)">Continue</div>
+    </section>
+
+    <section id="section13">
+        
+        <p>Congratulations! You've successfully applied gradient descent to train a linear regression model. You've seen how the algorithm iteratively adjusts the model's parameters to minimize the cost function and find the best-fitting line. This is a fundamental technique in machine learning, and you've mastered it! In the next lessons we will take a look at the challenges of local and global minima and a more advanced version of Gradient Descent. Get ready for more optimization adventures!</p>
+        <div class="image-placeholder">
+            <img src="/placeholder.svg?height=300&width=600" alt="A cartoon image of a hiker (representing a data scientist) standing proudly next to a well-fitted line on a scatter plot of data points. A signpost points forward, labeled 'Next: Local and Global Minima'.">
+        </div>
+    </section>
+
+    <script>
+        // Show the first section initially
+        document.getElementById("section1").style.display = "block";
+        document.getElementById("section1").style.opacity = "1";
+
+        function showNextSection(nextSectionId) {
+            const currentButton = event.target;
+            const nextSection = document.getElementById("section" + nextSectionId);
+            
+            currentButton.style.display = "none";
+            
+            nextSection.style.display = "block";
+            setTimeout(() => {
+                nextSection.style.opacity = "1";
+            }, 10);
+
+            setTimeout(() => {
+                nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        }
+
+        function revealAnswer(id) {
+            const revealText = document.getElementById(id + "-reveal");
+            const revealButton = event.target;
+            
+            revealText.style.display = "block";
+            revealButton.style.display = "none";
+        }
+
+        function checkAnswer(questionId, correctAnswer) {
+            const selectedOption = document.querySelector(`input[name="${questionId}"]:checked`);
+            const feedback = document.getElementById(`${questionId}-feedback`);
+            
+            if (selectedOption) {
+                if (parseInt(selectedOption.value) === correctAnswer) {
+                    feedback.textContent = "Correct! Well done!";
+                    feedback.style.color = "green";
+                } else {
+                    feedback.textContent = "Incorrect. Try again!";
+                    feedback.style.color = "red";
+                }
+                feedback.style.display = "block";
+            } else {
+                feedback.textContent = "Please select an answer.";
+                feedback.style.color = "blue";
+                feedback.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
