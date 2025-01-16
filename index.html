@@ -320,7 +320,7 @@
         <div class="stop-and-think">
             <h3>Stop and Think</h3>
             <h4>How would the gradient descent algorithm change if we were dealing with multiple linear regression (i.e., more than one independent variable)? What would the update rules look like?</h4>
-            <button class="reveal-button" onclick="revealAnswer('stop-and-think-answer')">Reveal</button>
+            <button class="reveal-button" onclick="revealAnswer('stop-and-think-reveal')">Reveal</button>
             <p id="stop-and-think-reveal" style="display: none;">In multiple linear regression, we would have more than one β coefficient (one for each independent variable). The update rule would be similar, but we would have a separate update rule for each β. The gradient vector would have more components, one for each β, and we would update all of them simultaneously in each iteration.</p>
         </div>
         <div class="continue-button" onclick="showNextSection(11)">Continue</div>
@@ -401,7 +401,7 @@
         }
 
         function revealAnswer(id) {
-            const revealText = document.getElementById(id + "-reveal");
+            const revealText = document.getElementById(id);
             const revealButton = event.target;
             
             revealText.style.display = "block";
