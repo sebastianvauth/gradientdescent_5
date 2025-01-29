@@ -33,25 +33,13 @@
         ul {
             padding-left: 20px;
         }
-        .image-placeholder, .visual-aid-placeholder, .interactive-placeholder {
-            text-align: center;
-            margin-top: 20px;
+        .image-placeholder, .interactive-placeholder, .continue-button, .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
+            text-align: left;
         }
-        .image-placeholder img, .visual-aid-placeholder img, .interactive-placeholder img {
+        .image-placeholder img, .interactive-placeholder img {
             max-width: 100%;
             height: auto;
             border-radius: 5px;
-        }
-        .interactive-placeholder {
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-            background-color: #f5f5f5;
-        }
-        .interactive-placeholder output {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
         }
         .vocab-section, .why-it-matters, .test-your-knowledge, .faq-section, .stop-and-think {
             padding: 20px;
@@ -160,49 +148,27 @@
             margin-top: 10px;
             margin-bottom: 8px;
         }
-        .visual-aid-placeholder-labels {
-            margin-top: 10px;
-        }
-        .visual-aid-placeholder-labels ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .visual-aid-placeholder-labels li {
-            margin-bottom: 5px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
     </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
     <section id="section1">
-        <h1>A New Approach to Optimization</h1>
-        <p>Greetings, optimization explorers! You've mastered the fundamentals of Gradient Descent, but now it's time to introduce a twist, a dash of randomness that can significantly speed up our journey to the minimum. Welcome to the world of Stochastic Gradient Descent (SGD)!</p>
+        <h1>Introduction to Stochastic Gradient Descent: Embracing Randomness for Faster Optimization</h1>
         <div class="image-placeholder">
             <img src="/placeholder.svg?height=300&width=600" alt="A hiker taking a shortcut down a mountain, using a zipline instead of walking, symbolizing the faster, more dynamic approach of stochastic gradient descent compared to traditional gradient descent.">
         </div>
+        <p>Greetings, optimization explorers! You've mastered the fundamentals of Gradient Descent, but now it's time to introduce a twist, a dash of randomness that can significantly speed up our journey to the minimum. Welcome to the world of Stochastic Gradient Descent (SGD)!</p>
         <div class="continue-button" onclick="showNextSection(2)">Continue</div>
     </section>
 
     <section id="section2">
         <h2>The Bottleneck of Batch Gradient Descent</h2>
-        <p>Recall that in traditional Gradient Descent, often called "Batch Gradient Descent," we calculate the gradient using *all* of our data points in each iteration. This can be computationally expensive, especially when dealing with massive datasets containing millions or even billions of data points. It's like our hiker surveying the entire mountain range before taking each step.</p>
-        <div class="visual-aid-placeholder">
-            <p><b>Batch Gradient Descent: The Full Survey</b></p>
+        <p>Recall that in traditional Gradient Descent, often called "Batch Gradient Descent," we calculate the gradient using <em>all</em> of our data points in each iteration. This can be computationally expensive, especially when dealing with massive datasets containing millions or even billions of data points. It's like our hiker surveying the entire mountain range before taking each step.</p>
+        <div class="interactive-placeholder">
+            <h3>Batch Gradient Descent: The Full Survey</h3>
             <img src="/placeholder.svg?height=300&width=600" alt="An animation showing a hiker standing at a high point, surveying the entire mountain range with binoculars before deciding on the direction of their next step. The process looks slow and meticulous, highlighting the computational burden of using all data points in each iteration.">
-            <p>Batch Gradient Descent: Calculating the gradient using all data points in each iteration can be slow and computationally expensive.</p>
+            <p><em>Batch Gradient Descent: Calculating the gradient using all data points in each iteration can be slow and computationally expensive.</em></p>
         </div>
         <p>While Batch Gradient Descent guarantees a steady path towards the minimum, it can be slow, especially when our dataset doesn't fit comfortably in memory. We need a more agile approach.</p>
         <div class="continue-button" onclick="showNextSection(3)">Continue</div>
@@ -210,27 +176,27 @@
 
     <section id="section3">
         <h2>Enter Stochastic Gradient Descent: The Power of Randomness</h2>
-        <p>This is where Stochastic Gradient Descent comes in. The "stochastic" part means "random." In SGD, instead of using all data points to calculate the gradient, we randomly select just *one* data point in each iteration. That's right, just one!</p>
-        <p>In practice, many implementations referred to as "SGD" actually use a small batch of random data points—commonly called *mini-batch SGD*. Shuffling the dataset each time we iterate through it (each "epoch") helps ensure that these updates are truly stochastic, improving convergence. When we do use a single data point at a time, we often call that "pure SGD," although, in real-world applications, mini-batches are far more common for efficiency and stability.</p>
-        <p>\[ \beta_j = \beta_j - \alpha * x_j^{(i)} * (f_{\beta}(x^{(i)}) - y^{(i)}) \]</p>
-        <p><b>Explanation:</b></p>
+        <p>This is where Stochastic Gradient Descent comes in. The "stochastic" part means "random." In SGD, instead of using all data points to calculate the gradient, we randomly select just <em>one</em> data point in each iteration. That's right, just one!</p>
+        <p>The mathematical expression for SGD is:</p>
+        <p>\[ \beta_j = \beta_j - \alpha * x_j^{(i)} * (f_\beta(x^{(i)}) - y^{(i)}) \]</p>
+        <p>Let's break down this formula:</p>
         <ul>
-            <li>\( \beta_j \): The j-th parameter we're trying to optimize.</li>
-            <li>\( \alpha \): The learning rate.</li>
-            <li>\( x_j^{(i)} \): The value of the j-th feature for the *randomly selected* i-th data point.</li>
-            <li>\( (f_{\beta}(x^{(i)}) - y^{(i)}) \): The error between the predicted value and the actual value for the *randomly selected* i-th data point.</li>
+            <li>$$ \beta_j $$: The j-th parameter we're trying to optimize.</li>
+            <li>$$ \alpha $$: The learning rate.</li>
+            <li>$$ x_j^{(i)} $$: The value of the j-th feature for the <em>randomly selected</em> i-th data point.</li>
+            <li>$$ (f_\beta(x^{(i)}) - y^{(i)}) $$: The error between the predicted value and the actual value for the <em>randomly selected</em> i-th data point.</li>
         </ul>
-        <p>In SGD, we update the parameters based on the gradient calculated from a single, randomly chosen data point (or a small mini-batch). This makes each iteration much faster, though it introduces some variability into the updates.</p>
+        <p>In SGD, we update the parameters based on the gradient calculated from a single, randomly chosen data point. This makes each iteration much faster.</p>
         <div class="continue-button" onclick="showNextSection(4)">Continue</div>
     </section>
 
     <section id="section4">
         <h2>The Intuition: A Quick Poll</h2>
         <p>Think of it like this: instead of surveying the entire country's population to gauge the average opinion (Batch Gradient Descent), you randomly sample one person's opinion at a time and update your estimate based on that single person (Stochastic Gradient Descent).</p>
-        <div class="visual-aid-placeholder">
-            <p><b>The Quick Poll Analogy</b></p>
+        <div class="interactive-placeholder">
+            <h3>The Quick Poll Analogy</h3>
             <img src="/placeholder.svg?height=300&width=600" alt="An animation contrasting two approaches: 1) A pollster painstakingly interviewing every person in a large crowd (representing Batch Gradient Descent). 2) A pollster randomly selecting individuals from the crowd for a quick interview (representing Stochastic Gradient Descent). The animation highlights the difference in speed and efficiency.">
-            <p>Stochastic Gradient Descent: Updating the estimate based on a single, randomly selected data point in each iteration.</p>
+            <p><em>Stochastic Gradient Descent: Updating the estimate based on a single, randomly selected data point in each iteration.</em></p>
         </div>
         <p>Of course, a single person's opinion might not be representative of the entire population. Similarly, the gradient calculated from a single data point might be quite different from the true gradient calculated using all data points. This introduces "noise" into the optimization process.</p>
         <div class="continue-button" onclick="showNextSection(5)">Continue</div>
@@ -239,13 +205,12 @@
     <section id="section5">
         <h2>The Benefits of Noise</h2>
         <p>Surprisingly, this "noise" can be beneficial. It can help the algorithm escape shallow local minima. Imagine our hiker being jolted out of a small dip by a sudden gust of wind, potentially allowing them to find a deeper valley.</p>
-        <div class="visual-aid-placeholder">
-            <p><b>Escaping Local Minima with Noise</b></p>
+        <div class="interactive-placeholder">
+            <h3>Escaping Local Minima with Noise</h3>
             <img src="/placeholder.svg?height=300&width=600" alt="An animation showing a hiker descending a landscape with multiple valleys. In one scenario (Batch Gradient Descent), the hiker gets stuck in a shallow local minimum. In another scenario (Stochastic Gradient Descent), the hiker's path is more erratic due to the noisy updates. This noise allows the hiker to escape the shallow local minimum and eventually reach the global minimum.">
-            <p>The noise in Stochastic Gradient Descent can help the algorithm escape shallow local minima and potentially find a better solution.</p>
+            <p><em>The noise in Stochastic Gradient Descent can help the algorithm escape shallow local minima and potentially find a better solution.</em></p>
         </div>
         <p>Furthermore, because each iteration is so much faster, SGD can often converge to a good solution much quicker than Batch Gradient Descent, especially for large datasets.</p>
-        <p>Additionally, many practitioners use a *learning rate schedule*, in which the learning rate is gradually reduced over time. This approach balances faster initial learning (when higher noise might be beneficial) with more stable convergence later on. Such schedules are especially helpful when working with very large datasets over many epochs.</p>
         <div class="continue-button" onclick="showNextSection(6)">Continue</div>
     </section>
 
@@ -253,7 +218,7 @@
         <h2>Interactive Exploration: SGD in Action</h2>
         <p>Let's see Stochastic Gradient Descent in action and compare it to Batch Gradient Descent. We will use this online tool from deeplearning.ai</p>
         <div class="interactive-placeholder">
-            <p><b>SGD Online Tool - <a href="https://www.deeplearning.ai/ai-notes/optimization" target="_blank">https://www.deeplearning.ai/ai-notes/optimization</a></b></p>
+            <h3>SGD Online Tool - <a href="https://www.deeplearning.ai/ai-notes/optimization" target="_blank">https://www.deeplearning.ai/ai-notes/optimization</a></h3>
             <p>We will use the interactive tool from deeplearning.ai to explore how SGD works. It allows to:</p>
             <ol>
                 <li>Generate a dataset with a selectable training set size (small, medium, large).</li>
@@ -261,14 +226,14 @@
                 <li>Optimize the cost function by iteratively updating parameters with a selectable learning rate (small, medium, large) and batch size (m = 1, m = 24, m = m).</li>
             </ol>
             <img src="/placeholder.svg?height=300&width=600" alt="A screenshot of the online tool shows the dataset generation, cost landscape visualization, and optimization settings.">
-            <p><b>Instructions:</b></p>
+            <h4>Instructions:</h4>
             <ol>
                 <li>Start by generating a small dataset. Observe the cost landscape.</li>
                 <li>Run the optimization with a small learning rate and a batch size of m=1 (pure SGD). Observe how the cost changes with each iteration. Notice the "noisy" path.</li>
                 <li>Experiment with different learning rates and batch sizes. See how they affect the convergence speed and the "smoothness" of the optimization path.</li>
                 <li>Generate a larger dataset and repeat the experiment. Notice how the batch size affects the computation time per iteration.</li>
             </ol>
-            <p><b>Guiding Questions:</b></p>
+            <h4>Guiding Questions:</h4>
             <ul>
                 <li>How does the learning rate affect the optimization process in SGD?</li>
                 <li>What is the effect of increasing the batch size?</li>
@@ -280,50 +245,45 @@
 
     <section id="section7">
         <h2>Build Your Vocabulary</h2>
-        <p>Let's define some key terms:</p>
         <div class="vocab-section">
-            <ul>
-                <li>
-                    <p><b>Stochastic Gradient Descent (SGD)</b></p>
-                    <p>A variation of Gradient Descent where the gradient is calculated using only one (or a very small batch of) randomly selected data point(s) in each iteration. This makes each iteration faster but introduces noise into the optimization process. In practice, most "SGD" implementations use mini-batches.</p>
-                </li>
-                <li>
-                    <p><b>Batch Gradient Descent</b></p>
-                    <p>The traditional form of Gradient Descent where the gradient is calculated using all data points in each iteration. This provides a more accurate estimate of the gradient but can be computationally expensive for large datasets.</p>
-                </li>
-                <li>
-                    <p><b>Mini-Batch Gradient Descent</b></p>
-                    <p>A compromise between Batch and Stochastic Gradient Descent. It calculates the gradient using a small, randomly selected subset of the data (a "mini-batch") in each iteration, typically in the range of 32 to a few hundred samples. This balances the speed of SGD with the stability of Batch Gradient Descent.</p>
-                </li>
-            </ul>
+            <h3>Key Terms</h3>
+            <h4 class="vocab-term">Stochastic Gradient Descent (SGD)</h4>
+            <p>A variation of Gradient Descent where the gradient is calculated using only one randomly selected data point in each iteration. This makes each iteration faster but introduces noise into the optimization process.</p>
+            <h4 class="vocab-term">Batch Gradient Descent</h4>
+            <p>The traditional form of Gradient Descent where the gradient is calculated using all data points in each iteration. This provides a more accurate estimate of the gradient but can be computationally expensive for large datasets.</p>
+            <h4 class="vocab-term">Mini-Batch Gradient Descent</h4>
+            <p>A compromise between Batch and Stochastic Gradient Descent. It calculates the gradient using a small, randomly selected subset of the data (a "mini-batch") in each iteration. This balances the speed of SGD with the stability of Batch Gradient Descent.</p>
         </div>
         <div class="continue-button" onclick="showNextSection(8)">Continue</div>
     </section>
 
     <section id="section8">
         <h2>Test Your Knowledge</h2>
-        <p>Time for a quick quiz to test your understanding!</p>
         <div class="test-your-knowledge">
+            <h3>Quick Quiz</h3>
             <h4>What is the main advantage of Stochastic Gradient Descent over Batch Gradient Descent?</h4>
-            <p><input type="radio" name="q1" value="a"> SGD always finds the global minimum.</p>
-            <p><input type="radio" name="q1" value="b"> SGD is generally faster, especially for large datasets.</p>
-            <p><input type="radio" name="q1" value="c"> SGD always converges to a better solution than Batch Gradient Descent.</p>
-            <p><input type="radio" name="q1" value="d"> SGD doesn't require a learning rate.</p>
-            <button class="check-button" onclick="checkAnswer('q1', 'b')">Check Answer</button>
-            <p id="q1-feedback" style="display: none;"></p>
+            <div id="quiz-options">
+                <button class="check-button" onclick="checkAnswer(1)">SGD always finds the global minimum.</button>
+                <button class="check-button" onclick="checkAnswer(2)">SGD is generally faster, especially for large datasets.</button>
+                <button class="check-button" onclick="checkAnswer(3)">SGD always converges to a better solution than Batch Gradient Descent.</button>
+                <button class="check-button" onclick="checkAnswer(4)">SGD doesn't require a learning rate.</button>
+            </div>
+            <p id="quiz-feedback" style="display: none;"></p>
         </div>
         <div class="continue-button" onclick="showNextSection(9)">Continue</div>
     </section>
 
     <section id="section9">
         <h2>Wrapping Up Lesson 5</h2>
-        <p>Excellent work! You've now been introduced to the exciting world of Stochastic Gradient Descent. You understand how it leverages randomness to achieve faster optimization, especially for large datasets. You've also learned about the benefits of the noise it introduces, how practical implementations often default to mini-batch approaches, and how learning rate schedules can improve convergence. In the next lesson, we'll summarize what we have learned so far and take a look at further concepts in gradient descent. Get ready for an even more dynamic approach to optimization!</p>
+        <p>Excellent work! You've now been introduced to the exciting world of Stochastic Gradient Descent. You understand how it leverages randomness to achieve faster optimization, especially for large datasets. You've also learned about the benefits of the noise it introduces and how it compares to Batch Gradient Descent.</p>
+        <p>In the next lesson, we'll summarize what we have learned so far and take a look at further concepts in gradient descent. Get ready for an even more dynamic approach to optimization!</p>
         <div class="image-placeholder">
             <img src="/placeholder.svg?height=300&width=600" alt="A hiker swiftly descending a mountain using a zipline, reaching the bottom faster than a hiker walking the path, symbolizing the speed and efficiency of Stochastic Gradient Descent.">
         </div>
     </section>
 
     <script>
+        // Show the first section initially
         document.getElementById("section1").style.display = "block";
         document.getElementById("section1").style.opacity = "1";
 
@@ -343,38 +303,32 @@
             }, 500);
         }
 
-        function revealAnswer(id) {
-            const revealText = document.getElementById(id);
-            const revealButton = event.target;
+        function checkAnswer(selectedOption) {
+            const feedback = document.getElementById("quiz-feedback");
+            const options = document.querySelectorAll(".check-button");
             
-            revealText.style.display = "block";
-            revealButton.style.display = "none";
-        }
-
-        function checkAnswer(questionId, correctAnswer) {
-            const selectedAnswer = document.querySelector(`input[name="${questionId}"]:checked`);
-            const feedbackElement = document.getElementById(`${questionId}-feedback`);
+            options.forEach(button => button.disabled = true);
             
-            if (selectedAnswer) {
-                if (selectedAnswer.value === correctAnswer) {
-                    feedbackElement.textContent = "Correct! Because SGD uses only one data point per iteration, it's much faster than Batch Gradient Descent, particularly when dealing with large datasets.";
-                    feedbackElement.style.color = "green";
-                } else {
-                    if (selectedAnswer.value === 'a') {
-                        feedbackElement.textContent = "Incorrect. While the noise in SGD can help it escape local minima, it doesn't guarantee finding the global minimum.";
-                    } else if (selectedAnswer.value === 'c') {
-                        feedbackElement.textContent = "Incorrect. SGD might not always converge to a better solution. The noise can sometimes lead it to a less optimal solution compared to Batch Gradient Descent.";
-                    } else {
-                        feedbackElement.textContent = "Incorrect. SGD still requires a learning rate to control the step size, just like Batch Gradient Descent.";
-                    }
-                    feedbackElement.style.color = "red";
-                }
+            if (selectedOption === 2) {
+                feedback.textContent = "Correct! Because SGD uses only one data point per iteration, it's much faster than Batch Gradient Descent, particularly when dealing with large datasets.";
+                feedback.style.color = "green";
             } else {
-                feedbackElement.textContent = "Please select an answer.";
-                feedbackElement.style.color = "blue";
+                let explanation;
+                switch(selectedOption) {
+                    case 1:
+                        explanation = "Incorrect. While the noise in SGD can help it escape local minima, it doesn't guarantee finding the global minimum.";
+                        break;
+                    case 3:
+                        explanation = "Incorrect. SGD might not always converge to a better solution. The noise can sometimes lead it to a less optimal solution compared to Batch Gradient Descent.";
+                        break;
+                    case 4:
+                        explanation = "Incorrect. SGD still requires a learning rate to control the step size, just like Batch Gradient Descent.";
+                        break;
+                }
+                feedback.textContent = explanation;
+                feedback.style.color = "red";
             }
-            
-            feedbackElement.style.display = "block";
+            feedback.style.display = "block";
         }
     </script>
 </body>
